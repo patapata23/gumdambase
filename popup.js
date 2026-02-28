@@ -12,7 +12,8 @@ const TIME_SLOTS = [
 const DEFAULT_SETTINGS = {
   targetTimes: ['12:00～12:30'],
   retryInterval: 1,
-  maxDuration: 3
+  maxDuration: 3,
+  autoRun: true
 };
 
 // 設定を読み込み
@@ -50,6 +51,9 @@ function loadSettings() {
     // その他の設定
     document.getElementById('retryInterval').value = settings.retryInterval;
     document.getElementById('maxDuration').value = settings.maxDuration;
+    document.getElementById('autoRun').checked = settings.autoRun;
+
+    checkExecutionStatus();
   });
 }
 
@@ -66,7 +70,8 @@ function saveSettings() {
   const settings = {
     targetTimes: selectedTimes,
     retryInterval: parseFloat(document.getElementById('retryInterval').value),
-    maxDuration: parseInt(document.getElementById('maxDuration').value)
+    maxDuration: parseInt(document.getElementById('maxDuration').value),
+    autoRun: document.getElementById('autoRun').checked
   };
 
   chrome.storage.sync.set(settings, () => {
@@ -98,6 +103,8 @@ function showStatus(message, isSuccess) {
 // 手動実行
 function runNow() {
   const runBtn = document.getElementById('runNowBtn');
+  const stopBtn = document.getElementById('stopBtn');
+
   runBtn.disabled = true;
   runBtn.textContent = '実行中...';
 
@@ -120,10 +127,54 @@ function runNow() {
           showStatus('⚠️ ページをリロードしてください', false);
         } else {
           showStatus('✅ 実行を開始しました！', true);
+          runBtn.style.display = 'none';
+          stopBtn.style.display = 'block';
         }
-
         runBtn.disabled = false;
         runBtn.textContent = '▶️ 今すぐ実行';
+      });
+    }
+  });
+}
+
+// 実行を停止
+function stopExecution() {
+  chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+    if (tabs[0]) {
+      chrome.tabs.sendMessage(tabs[0].id, {action: 'stop'}, (response) => {
+        if (chrome.runtime.lastError) {
+          showStatus('⚠️ 停止できませんでした', false);
+        } else {
+          showStatus('⏹️ 実行を停止しました', true);
+          document.getElementById('stopBtn').style.display = 'none';
+          document.getElementById('runNowBtn').style.display = 'block';
+          setTimeout(checkExecutionStatus, 500);
+        }
+      });
+    }
+  });
+}
+
+// 実行状態をチェック
+function checkExecutionStatus() {
+  chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+    if (tabs[0] && tabs[0].url && tabs[0].url.includes('gundam-base-entry.net')) {
+      // 実行状態を問い合わせ
+      chrome.tabs.sendMessage(tabs[0].id, {action: 'getStatus'}, (response) => {
+        if (chrome.runtime.lastError) {
+          // エラーの場合は停止状態とみなす
+          return;
+        }
+
+        if (response && response.isRunning) {
+          console.log('✓ 実行中を検知');
+          document.getElementById('runNowBtn').style.display = 'none';
+          document.getElementById('stopBtn').style.display = 'block';
+        } else {
+          console.log('✓ 停止中');
+          document.getElementById('runNowBtn').style.display = 'block';
+          document.getElementById('stopBtn').style.display = 'none';
+        }
       });
     }
   });
@@ -134,6 +185,7 @@ document.getElementById('saveBtn').addEventListener('click', saveSettings);
 document.getElementById('resetBtn').addEventListener('click', resetSettings);
 
 document.getElementById('runNowBtn').addEventListener('click', runNow);
+document.getElementById('stopBtn').addEventListener('click', stopExecution);
 
 // 初期化
 loadSettings();

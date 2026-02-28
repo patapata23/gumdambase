@@ -237,6 +237,62 @@
       opacity: 0.5;
       cursor: not-allowed;
     }
+
+    .toggle-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding: 8px 0;
+    }
+
+    .toggle-container input[type="checkbox"] {
+      display: none;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 48px;
+      height: 24px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: white;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.3s;
+    }
+
+    .toggle-container input:checked + .toggle-switch {
+      background: #4CAF50;
+    }
+
+    .toggle-container input:checked + .toggle-switch::after {
+      transform: translateX(24px);
+    }
+
+    #stopBtn {
+      width: 100%;
+      background: linear-gradient(135deg, #f44336, #d32f2f);
+      color: white;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    #stopBtn:hover {
+      background: linear-gradient(135deg, #e53935, #c62828);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(244,67,54,0.3);
+    }
   </style>
 </head>
 <body>
@@ -264,6 +320,13 @@
   <div class="section">
     <div class="section-title">⚙️ 動作設定</div>
 
+    <label class="toggle-container">
+      <span>自動実行</span>
+      <input type="checkbox" id="autoRun" checked>
+      <span class="toggle-switch"></span>
+    </label>
+    <div class="help-text">ページアクセス時に自動で開始</div>
+
     <label>
       リトライ間隔（秒）
       <input type="number" id="retryInterval" min="0.5" max="10" step="0.5" value="1">
@@ -284,6 +347,7 @@
     <div class="section-title">🎮 手動実行</div>
     <div class="help-text">予約ページを開いている状態でクリック</div>
     <button id="runNowBtn">▶️ 今すぐ実行</button>
+    <button id="stopBtn" style="display:none;">⏹️ 停止</button>
   </div>
 
   <div class="status" id="status"></div>
