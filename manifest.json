@@ -1,17 +1,31 @@
 {
   "manifest_version": 3,
   "name": "ガンダムベース予約自動化",
-  "version": "1.0",
+  "version": "2.0",
   "description": "予約フォームの自動入力と遷移先の自動クリック",
-  "permissions": ["storage"],
+  "permissions": ["storage", "tabs"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
   "content_scripts": [
     {
       "matches": [
         "https://www.gundam-base-entry.net/entry",
-        "https://www.gundam-base-entry.net/confirm"
+        "https://www.gundam-base-entry.net/confirm",
+        "https://www.gundam-base-entry.net/*"
       ],
       "js": ["content.js"],
-      "run_at": "document_idle"
+      "run_at": "document_end"
     }
   ]
 }

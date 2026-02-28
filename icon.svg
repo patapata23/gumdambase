@@ -1,0 +1,35 @@
+<svg width="128" height="128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="128" height="128" rx="24" fill="url(#grad)"/>
+
+  <!-- ガンダムヘッドのシルエット風 -->
+  <g fill="white" opacity="0.9">
+    <!-- 頭部 -->
+    <rect x="44" y="30" width="40" height="35" rx="4"/>
+    <!-- V字アンテナ -->
+    <polygon points="64,20 59,30 69,30"/>
+    <!-- 目 -->
+    <rect x="50" y="42" width="10" height="4" fill="#667eea"/>
+    <rect x="68" y="42" width="10" height="4" fill="#667eea"/>
+    <!-- 顎 -->
+    <rect x="52" y="58" width="24" height="8" rx="2"/>
+  </g>
+
+  <!-- ロボットアーム/自動化の象徴 -->
+  <g fill="white" opacity="0.8">
+    <circle cx="34" cy="90" r="8"/>
+    <rect x="30" y="85" width="20" height="4" transform="rotate(-45 40 87)"/>
+    <circle cx="94" cy="90" r="8"/>
+    <rect x="78" y="85" width="20" height="4" transform="rotate(45 88 87)"/>
+  </g>
+
+  <!-- 稲妻マーク（自動化・スピード） -->
+  <polygon points="70,75 60,85 65,85 55,100 68,88 63,88" fill="#FFD700"/>
+</svg>
