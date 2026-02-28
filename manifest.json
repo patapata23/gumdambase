@@ -6,7 +6,10 @@
   "permissions": ["storage"],
   "content_scripts": [
     {
-      "matches": ["https://www.gundam-base-entry.net/*"],
+      "matches": [
+        "https://www.gundam-base-entry.net/entry",
+        "https://www.gundam-base-entry.net/confirm"
+      ],
       "js": ["content.js"],
       "run_at": "document_idle"
     }
